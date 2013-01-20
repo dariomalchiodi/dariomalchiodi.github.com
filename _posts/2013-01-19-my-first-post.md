@@ -3,11 +3,12 @@ layout: post
 title: "Let me introduce... my blog"
 description: ""
 categories: [General]
-tags: [Ego]
+tags: [Blog, Jekyll, Bootstrap, Markdown, Liquid]
 ---
 {% include JB/setup %}
-I decided to set up this blog mostly with the aim of writing down setup
-instructions as neat as possible for the software I use. So, why don't
+I decided to set up this blog mostly with the aim of writing down install
+instructions as neat as possible for the software I use, so I (hopefully)
+can save time when setup a new computer. So, why don't
 describe the technology behind the blog itself as a first post?
 
 Quick and dirty: the blog is a set of [HTML](http://en.wikipedia.org/wiki/HTML)
@@ -121,5 +122,5 @@ The only things I did not find there are the following ones.
    `_includes/themes/twitter/default.html` through a `link` tag:
 
 {% highlight html %}
-<link href="{{ ASSET_PATH }}/css/syntax.css" rel="stylesheet" type="text/css" media="all">
+<link href="{% raw %}{{ ASSET_PATH }}{% endraw %}/css/syntax.css" rel="stylesheet" type="text/css" media="all">
 {% endhighlight %}
