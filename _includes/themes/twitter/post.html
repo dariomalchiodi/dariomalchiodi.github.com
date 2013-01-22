@@ -1,9 +1,19 @@
 <div class="page-header">
   <h1>{{ page.title }} <small>{% if page.tagline %} <small>{{ page.tagline }}</small>{% endif %}</small></h1>
-</div>
+    <div class="date"><strong>Published</strong> {{ page.date | date_to_long_string }}</div>
 
-<div class="row">
-  <div class="span8">
+  {% unless page.categories == empty %}
+    <strong>Categories</strong>:
+    {% for category in page.categories %} <a href="/tags/{{ tag }}" rel="tooltip" title="View posts tagged with &quot;{{ tag }}&quot;">{{ category }}</a>  {% if forloop.last != true %} – {% endif %} {% endfor %}
+  {% endunless %}
+  <br>
+  {% unless page.tags == empty %}
+    <strong>Tags</strong>:
+    {% for tag in page.tags %} <a href="/tags/{{ tag }}" rel="tooltip" title="View posts tagged with &quot;{{ tag }}&quot;">{{ tag }}</a>  {% if forloop.last != true %} – {% endif %} {% endfor %}
+  {% endunless %}
+  </div>
+
+<div>
     {{ content }}
     <hr>
     <div class="pagination">
@@ -23,18 +33,4 @@
     </div>
     <hr>
     {% include JB/comments %}
-  </div>
-  
-  <div class="span4">
-    <h4>Published</h4>
-    <div class="date"><span>{{ page.date | date_to_long_string }}</span></div>
-
-  {% unless page.tags == empty %}
-    <h4>Tags</h4>
-    <ul class="tag_box">
-    {% assign tags_list = page.tags %}
-    {% include JB/tags_list %}
-    </ul>
-  {% endunless %}  
-  </div>
 </div>
