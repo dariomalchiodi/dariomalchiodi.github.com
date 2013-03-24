@@ -174,7 +174,7 @@ valuable resources. The only things I did not find there are the following ones.
     man-in-the-middle attacks. But in the end, this will allow your posts to
     have nice formulas such as
 
-    $$ \frac{1}{\sqrt{2 \pi} \sigma} \int_0^{+\infty} \mathrm e^{\frac{(x - \mu)^2}{2 \sigma^2}} \mathrm d x = 1 $$
+    $$ \frac{1}{\sqrt{2 \pi} \sigma} \int_{-\infty}}^{+\infty} \mathrm e^{\frac{(x - \mu)^2}{2 \sigma^2}} \mathrm d x = 1 $$
 
     Remeber, though,
     that inline equations should escape backslash in delimiters, thus using `\\(` and
