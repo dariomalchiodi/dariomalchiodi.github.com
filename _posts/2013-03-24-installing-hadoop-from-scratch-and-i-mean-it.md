@@ -2,8 +2,8 @@
 layout: post
 title: "Installing hadoop from scratch. And I mean it"
 description: ""
-category: 
-tags: [Hadoop, Ubuntu]
+category: Big scale analytics
+tags: [Hadoop, Ubuntu, VirtualBox]
 ---
 {% include JB/setup %}
 This year I started a new course on [Big scale
