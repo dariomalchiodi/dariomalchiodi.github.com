@@ -297,12 +297,44 @@ of the last output lines of previous command.
 #### A few more steps and... that's it!
 Hadoop is now installed. Invoking the scripts `start-dfs.sh` and
 `start-yarn.sh` respectively start the distributed file system and
-the mapreduce daemons. To stop them, simply invoke `stop-dfs.sh` and
-`stop-yarn.sh`. Note that the user directory should be manually
-created:
+the mapreduce daemons:
+
+{% highlight console %}
+hadoop-user@manhattan:~$ start-dfs.sh
+8/10/10 15:28:31 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Starting namenodes on [localhost]
+localhost: starting namenode, logging to /usr/local/hadoop-2.4.0/logs/hadoop-hadoop-user-namenode-manhattan.out
+localhost: starting datanode, logging to /usr/local/hadoop-2.4.0/logs/hadoop-hadoop-user-datanode-manhattan.out
+Starting secondary namenodes [0.0.0.0]
+0.0.0.0: starting secondarynamenode, logging to /usr/local/hadoop-2.4.0/logs/hadoop-hadoop-user-secondarynamenode-manhattan.out
+8/10/10 15:28:53 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+hadoop-user@manhattan:~$ start-yarn.sh
+starting yarn daemons
+starting resourcemanager, logging to /usr/local/hadoop/logs/yarn-hadoop-user-resourcemanager-manhattan.out
+localhost: starting nodemanager, logging to /usr/local/hadoop-2.4.0/logs/yarn-hadoop-user-nodemanager-manhattan.out
+{% endhighlight %}
+
+Although it is possible to directly write on the hadoop file system root
+directory, it is more advisable to create the user directory for `hadoop-user`,
+because all relative paths will refer precisely to this directory:
 
 {% highlight console %}
 hadoop-user@manhattan:~$ hdfs dfs -mkdir /user
 hadoop-user@manhattan:~$ hdfs dfs -mkdir /user/hadoop-user
 {% endhighlight %}
 
+An absence of outputs from these command invokations means a successful
+directory creation, which also ensure that the distributed filesystem
+component of hadoop has been correctly installed. To test also the mapreduce
+component it is possible to run one of the example jobs distributed along with
+hadoop:
+
+{% highlight console %}
+hadoop-user@manhattan:~$ hadoop jar /usr/local/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.4.0.jar pi 10 1000
+...
+Job Finished in 34.136 seconds
+Estimated value of Pi is 3.1428571428571
+{% endhighlight %}
+
+Finally, to stop the hadoop daemons, simply invoke `stop-dfs.sh` and
+`stop-yarn.sh`.
