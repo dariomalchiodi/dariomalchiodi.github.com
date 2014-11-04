@@ -67,7 +67,7 @@ be left blank, except the password.
 {% highlight console %}
 boss@manhattan:~$ sudo addgroup hadoop
 ...
-boss@manhattan:~$ sudo adduser --ingroup hadoop hduser
+boss@manhattan:~$ sudo adduser --ingroup hadoop hadoop-user
 ...
 {% endhighlight %}
 
@@ -287,7 +287,7 @@ The last step consists in formatting the file system, operation to be
 executed as `hadoop-user`:
 
 {% highlight console %}
-hduser@manhattan:~$ hdfs namenode -format
+hadoop-user@manhattan:~$ hdfs namenode -format
 ...
 {% endhighlight %}
 
