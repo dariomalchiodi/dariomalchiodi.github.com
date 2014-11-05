@@ -9,21 +9,18 @@ tags: [Hadoop, Ubuntu, VirtualBox]
 In a [previous post](http://log.malchiodi.com/2013/03/24/installing-hadoop-from-scratch-and-i-mean-it/)
 I described how to set up a single-node hadoop cluster in an ubuntu
 server running on a virtual machine. Sort story: it's related to my
-course on [Big scale analytics](
-http://malchiodi.di.unimi.it/teaching/big-scale-analytics). Refer to
+course on [Big scale analytics](http://malchiodi.di.unimi.it/teaching/big-scale-analytics). Refer to
 the original post for the details. As software upgrade is a matter of
 fact, I decided to update that tutorial for the more recent 2.4.0
 release of hadoop.
 
 I opted for a VM-based solution, so that most of hardware and OS
 issues students would face would be limited to installing and
-configuring the VM manager. For the records, I am running Mac OS X
-10.9.5 and relying on [VirtualBox](https://www.virtualbox.org/)
-4.2.8.
+configuring the VM manager. For the records, I am running Mac OS X 10.9.5
+and relying on [VirtualBox](https://www.virtualbox.org/) 4.2.8.
 
 First of all, I downloaded the ISO image for Ubuntu server 14.04 at
-the [Ubuntu server download page]
-(http://www.ubuntu.com/download/server) and created a Linux-Ubuntu
+the [Ubuntu server download page](http://www.ubuntu.com/download/server) and created a Linux-Ubuntu
 based VM in VirtualBox with 1GB RAM (who read my previous post will
 note an increase in the server's RAM, which is due to the fact that
 the default RAM amount of 512MB did lead to hadoop crashes during
@@ -35,8 +32,7 @@ additional software, with the exception of manual package installation
 support.
 
 Once the system was up and running, I installed Hadoop following a
-mix of the instructions in the tutorials provided by [Michael Noll]
-(http://www.michael-noll.com/tutorials/running-hadoop-on-ubuntu-linux-single-node-cluster/),
+mix of the instructions in the tutorials provided by [Michael Noll](http://www.michael-noll.com/tutorials/running-hadoop-on-ubuntu-linux-single-node-cluster/),
 [BigData Handler](http://bigdatahandler.com/hadoop-hdfs/installing-single-node-hadoop-2.2.0.on-ubuntu/),
 and [Rasesh Mori](http://raseshmori.wordpress.com/2012/09/23/install-hadoop-2-0-1-yarn-nextgen/), that is what follows.
 
@@ -165,7 +161,7 @@ that IPV6 is actually disabled.
 #### Download and install Hadoop
 
 Download
-[hadoop-2.4.0.tar.gz](wget http://apache.mirrors.pair.com/hadoop/common/hadoop-2.4.0/hadoop-2.4.0.tar.gz),
+[hadoop-2.4.0.tar.gz](http://apache.mirrors.pair.com/hadoop/common/hadoop-2.4.0/hadoop-2.4.0.tar.gz),
 unpack it and move the results in `/usr/local`, adding a symlink
 using the more friendly name `hadoop` and changing ownership of the
 directory contents to the `hadoop-user` user:
@@ -280,7 +276,6 @@ in the `value` XML nodes:
 hadoop-user@manhattan:~$ mkdir -p /usr/local/hadoop/yarn_data/hdfs/namenode
 hadoop-user@manhattan:~$ mkdir -p /usr/local/hadoop/yarn_data/hdfs/datanode
 {% endhighlight %}
-
 
 #### Formatting the distributed file system
 The last step consists in formatting the file system, operation to be
