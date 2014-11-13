@@ -2,8 +2,8 @@
 layout: post
 title: "Executing JAR encoded MapReduce jobs in AWS either through Web interface or CLI"
 description: ""
-category: 
-tags: []
+category: Big scale analytics
+tags: [AWS, MapReduce, Hadoop, Java]
 ---
 {% include JB/setup %}
 
