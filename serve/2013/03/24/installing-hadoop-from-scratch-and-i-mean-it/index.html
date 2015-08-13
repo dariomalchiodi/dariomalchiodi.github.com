@@ -1,0 +1,361 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Installing hadoop from scratch. And I mean it</title>
+    <meta name="description" content="">
+    <meta name="author" content="Dario Malchiodi">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/twitter/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/twitter/css/pygments.css" rel="stylesheet" type="text/css" media="all">
+
+    <script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">MalchioLog</a>
+          <ul class="nav">
+            <!-- 
+            
+            
+
+
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/archive.html">Archive</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/categories.html">Categories</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/pages.html">Pages</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags.html">Tags</a></li>
+      	
+      
+    
+  
+
+
+ -->
+            <li><a href="about.html">About</a></li>
+            <li><a href="archive.html">Archive</a></li>
+            <li><a href="categories.html">Categories</a></li>
+            <li><a href="tags.html">Tags</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>Installing hadoop from scratch. And I mean it <small></small></h1>
+    <div class="date"><strong>Published</strong> 24 March 2013</div>
+
+  
+    <strong>Categories</strong>:
+     <a href="/tags/" rel="tooltip" title="View posts tagged with &quot;&quot;">Big scale analytics</a>   
+  
+  <br>
+  
+    <strong>Tags</strong>:
+     <a href="/tags/Hadoop" rel="tooltip" title="View posts tagged with &quot;Hadoop&quot;">Hadoop</a>   –   <a href="/tags/Ubuntu" rel="tooltip" title="View posts tagged with &quot;Ubuntu&quot;">Ubuntu</a>   –   <a href="/tags/VirtualBox" rel="tooltip" title="View posts tagged with &quot;VirtualBox&quot;">VirtualBox</a>   
+  
+  </div>
+
+<div>
+    <p>This year I started a new course on <a href='http://malchiodi.di.unimi.it/teaching/big-scale-analytics'>Big scale analytics</a>, and the first tool I introduced students to is, not surprisingly, <a href='http://hadoop.apache.org/'>Hadoop</a>. Having pointed out that this tool is useful when run on a significant cluster, I nonetheless wanted students to be able to install their own copy of the software even on a single-node cluster. Maybe some among them will have sometime to run a cluster on their own. Moreover (and most importantly), this will let them to autonomously run a job, experiment and debug on small scale before sending everything, for instance, to <a href='http://aws.amazon.com'>AWS</a>.</p>
+
+<p>I opted for a VM-based solution, so that most of hardware and OS issues students would face would be limited to installing and configuring the VM manager. For the records, I am running Mac OS X 10.7.5 and relying on <a href='https://www.virtualbox.org/'>VirtualBox</a> 4.2.8. The rest of this post documents the steps I followed to get a single-node Hadoop cluster running.</p>
+
+<p>First of all, I downloaded the ISO image for Ubuntu server 12.10 at the <a href='http://www.ubuntu.com/download/server'>Ubuntu server download page</a> and created a Linux-Ubuntu based VM in VirtualBox with default settings (that is, 512 MB of RAM and a 8GB VDI-based HD, dynamically allocated) and a DVD preloaded with the Ubuntu server 12.10 ISO image. Then I ran the VM and followed all default installation options, except for keyboard layout (I use an italian keyboard). I did not install any additional software, with the exception of manual package installation support.</p>
+
+<p>Once the system was up and running, I installed Hadoop (almost) following the instructions in the <a href='http://www.michael-noll.com/tutorials/running-hadoop-on-ubuntu-linux-single-node-cluster/'>tutorial written by Michael Noll</a>, that is what follows.</p>
+
+<p>Some details about the examples: the host name is <code>manhattan</code>, with an administrator user with login name <code>boss</code>; three points (<code>...</code>) in a console are used in order to skip verbose output.</p>
+
+<h4 id='installing_java'>Installing Java</h4>
+
+<p>The mentioned tutorial suggest a potentially unsafe procedure in order to install the jdk through <code>apt-get</code>, thus I opted for a manual installation:</p>
+<div class='highlight'><pre><code class='console'><span class='gp'>boss@manhattan:~$</span> wget --no-cookies --header <span class='s2'>&quot;Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com&quot;</span> <span class='s2'>&quot;http://download.oracle.com/otn-pub/java/jdk/7/jdk-7-linux-x64.tar.gz&quot;</span>
+<span class='go'>...</span>
+<span class='gp'>boss@manhattan:~$</span> tar -xvf jdk-7-linux-x64.tar.gz
+<span class='go'>...</span>
+<span class='gp'>boss@manhattan:~$</span> sudo mkdir -p /usr/lib/jvm/jdk1.7.0 
+<span class='gp'>boss@manhattan:~$</span> sudo mv jdk1.7.0_03/* /usr/lib/jvm/jdk1.7.0/
+<span class='gp'>boss@manhattan:~$</span> sudo update-alternatives --install <span class='s2'>&quot;/usr/bin/java&quot;</span> <span class='s2'>&quot;java&quot;</span> <span class='s2'>&quot;/usr/lib/jvm/jdk1.7.0/bin/java&quot;</span> 1
+<span class='go'>...</span>
+<span class='gp'>boss@manhattan:~$</span> sudo update-alternatives --install <span class='s2'>&quot;/usr/bin/javac&quot;</span> <span class='s2'>&quot;javac&quot;</span> <span class='s2'>&quot;/usr/lib/jvm/jdk1.7.0/bin/javac&quot;</span> 1
+<span class='go'>...</span>
+<span class='gp'>boss@manhattan:~$</span> sudo update-alternatives --install <span class='s2'>&quot;/usr/bin/javaws&quot;</span> <span class='s2'>&quot;javaws&quot;</span> <span class='s2'>&quot;/usr/lib/jvm/jdk1.7.0/bin/javaws&quot;</span> 1
+<span class='go'>...</span>
+<span class='gp'>boss@manhattan:~$</span> javac -version
+<span class='go'>javac 1.7.0</span>
+</code></pre></div>
+<h4 id='adding_a_dedicated_user'>Adding a dedicated user</h4>
+
+<p>It is advisable not to run Hadoop services through a general-purpose user, so the next step consists in adding a group <code>hadoop</code> and a user <code>hduser</code> belonging to that group.</p>
+<div class='highlight'><pre><code class='console'><span class='gp'>boss@manhattan:~$</span> sudo addgroup hadoop
+<span class='go'>...</span>
+<span class='gp'>boss@manhattan:~$</span> sudo adduser --ingroup hadoop hduser
+<span class='go'>...</span>
+</code></pre></div>
+<h4 id='setup_ssh'>Setup SSH</h4>
+
+<p>All communications with Hadoop are encrypted via SSH, thus the corresponding server should be installed:</p>
+<div class='highlight'><pre><code class='console'><span class='gp'>boss@manhattan:~$</span> sudo apt-get install openssh-server
+</code></pre></div>
+<p>and the <code>hduser</code> must be associated to a key pair and subsequently granting its access to the local machine:</p>
+<div class='highlight'><pre><code class='console'><span class='gp'>boss@manhattan:~$</span> su - hduser
+<span class='gp'>hduser@manhattan:~$</span> ssh-keygen -t rsa -P <span class='s2'>&quot;&quot;</span>
+<span class='go'>Generating public/private rsa key pair.</span>
+<span class='go'>...</span>
+<span class='go'>The key&#39;s randomart image is:</span>
+<span class='go'>...</span>
+<span class='gp'>hduser@manhattan:~$</span> cat <span class='nv'>$HOME</span>/.ssh/id_rsa.pub &gt;&gt; <span class='nv'>$HOME</span>/.ssh/authorized_keys
+</code></pre></div>
+<p>Now the <code>hduser</code> should be able to access via ssh to <code>localhost</code>:</p>
+<div class='highlight'><pre><code class='console'><span class='gp'>hduser@manhattan:~$</span> ssh localhost
+<span class='go'>The authenticity of host &#39;localhost (::1)&#39; can&#39;t be established.</span>
+<span class='go'>...</span>
+<span class='go'>Last login: ...</span>
+<span class='gp'>$</span>
+</code></pre></div>
+<h4 id='disable_ipv6'>Disable IPV6</h4>
+
+<p>Hadoop and IPV6 do not agree on the meaning of <code>0.0.0.0</code> address, thus it is adivsable to disable IPV6 adding the following lines at the end of <code>/etc/sysctl.conf</code> (after having switched to the <code>boss</code> user):</p>
+<div class='highlight'><pre><code class='properties'><span class='c'># disable ipv6</span>
+<span class='na'>net.ipv6.conf.all.disable_ipv6</span> <span class='o'>=</span> <span class='s'>1</span>
+<span class='na'>net.ipv6.conf.default.disable_ipv6</span> <span class='o'>=</span> <span class='s'>1</span>
+<span class='na'>net.ipv6.conf.lo.disable_ipv6</span> <span class='o'>=</span> <span class='s'>1</span>
+</code></pre></div>
+<p>After a system reboot the output of <code>cat /proc/sys/net/ipv6/conf/all/disable_ipv6</code> should be <code>1</code>, meaning that IPV6 is actually disabled.</p>
+
+<h3 id='hadoop'>Hadoop</h3>
+
+<h4 id='download_and_install_hadoop'>Download and install Hadoop</h4>
+
+<p>Download <a href='http://archive.apache.org/dist/hadoop/core/hadoop-0.20.205.0/hadoop-0.20.205.0.tar.gz'>hadoop-0.20.205.0.tar.gz</a>, unpack it and move the results in <code>/usr/local</code>, adding a symlink using the more friendly name <code>hadoop</code> and changing ownership to the <code>hduser</code> user:</p>
+<div class='highlight'><pre><code class='console'><span class='gp'>boss@manhattan:~$</span> wget http://archive.apache.org/dist/hadoop/core/hadoop-0.20.205.0/hadoop-0.20.205.0.tar.gz
+<span class='go'>...</span>
+<span class='gp'>boss@manhattan:~$</span> sudo tar xzf hadoop-0.20.205.0.tar.gz
+<span class='gp'>boss@manhattan:~$</span> sudo mv hadoop-0.20.205.0 /usr/local/hadoop-0.20.205.0
+<span class='gp'>boss@manhattan:~$</span> <span class='nb'>cd</span> /usr/local
+<span class='gp'>boss@manhattan:/usr/local$</span> sudo ln -s hadoop-0.20.205.0 hadoop
+<span class='gp'>boss@manhattan:/usr/local$</span> sudo chown -R hduser:hadoop hadoop
+</code></pre></div>
+<h4 id='setup_the_dedicated_user_environment'>Setup the dedicated user environment</h4>
+
+<p>Switch to the <code>hduser</code> user and add the following lines at the end of the <code>.bashrc</code> file:</p>
+<div class='highlight'><pre><code class='sh'><span class='c'># Set Hadoop-related environment variables</span>
+<span class='nb'>export </span><span class='nv'>HADOOP_PREFIX</span><span class='o'>=</span>/usr/local/hadoop
+
+<span class='c'># Set JAVA_HOME</span>
+<span class='nb'>export </span><span class='nv'>JAVA_HOME</span><span class='o'>=</span>/usr/lib/jvm/jdk1.7.0
+
+<span class='c'># Some convenient aliases and functions for running Hadoop-related commands</span>
+<span class='nb'>unalias </span>fs &amp;&gt; /dev/null
+<span class='nb'>alias </span><span class='nv'>fs</span><span class='o'>=</span><span class='s2'>&quot;hadoop fs&quot;</span>
+<span class='nb'>unalias </span>hls &amp;&gt; /dev/null
+<span class='nb'>alias </span><span class='nv'>hls</span><span class='o'>=</span><span class='s2'>&quot;fs -ls&quot;</span>
+
+<span class='c'># Add Hadoop bin/ directory to PATH</span>
+<span class='nb'>export </span><span class='nv'>PATH</span><span class='o'>=</span><span class='nv'>$PATH</span>:<span class='nv'>$HADOOP_PREFIX</span>/bin
+</code></pre></div>
+<p>get back to the administrator user, then open <code>/usr/local/hadoop/conf/hadoop-env.sh</code>, uncomment the line setting <code>JAVA_HOME</code> and set its value to the jdk directory:</p>
+<div class='highlight'><pre><code class='sh'><span class='nb'>export </span><span class='nv'>JAVA_HOME</span><span class='o'>=</span>/usr/lib/jvm/jdk1.7.0
+</code></pre></div>
+<h4 id='configure_hadoop'>Configure Hadoop</h4>
+
+<p>First of all, a directory for temporary data generated by Hadoop should be in place, with proper access rights:</p>
+<div class='highlight'><pre><code class='console'><span class='gp'>boss@manhattan:~$</span> sudo mkdir -p /opt/hadoop/tmp
+<span class='gp'>boss@manhattan:~$</span> sudo chown hduser:hadoop /opt/hadoop/tmp
+<span class='gp'>boss@manhattan:~$</span> sudo chmod 750 /opt/hadoop/tmp
+</code></pre></div>
+<p>This directory should be specified as value for the <code>hadoop.tmp.dir</code> property in file <code>/usr/local/hadoop/conf/core-site.xml</code>. Note that this file will likely contain only an empty <code>configuration</code> tag, within which a <code>property</code> tag should be nested:</p>
+<div class='highlight'><pre><code class='xml'><span class='c'>&lt;!-- Put site-specific property overrides in this file. --&gt;</span>
+<span class='nt'>&lt;configuration&gt;</span>
+  <span class='nt'>&lt;property&gt;</span>
+    <span class='nt'>&lt;name&gt;</span>hadoop.tmp.dir<span class='nt'>&lt;/name&gt;</span>
+    <span class='nt'>&lt;value&gt;</span>/opt/hadoop/tmp<span class='nt'>&lt;/value&gt;</span>
+    <span class='nt'>&lt;description&gt;</span>A base for other temporary directories<span class='nt'>&lt;/description&gt;</span>
+  <span class='nt'>&lt;/property&gt;</span>
+  <span class='nt'>&lt;property&gt;</span>
+    <span class='nt'>&lt;name&gt;</span>fs.default.name<span class='nt'>&lt;/name&gt;</span>
+    <span class='nt'>&lt;value&gt;</span>hdfs://localhost:54310<span class='nt'>&lt;/value&gt;</span>
+    <span class='nt'>&lt;description&gt;</span>The name of the default file system. A URI whose scheme and
+    authority determine the FileSystem implementation. The URI&#39;s scheme
+    determines the config property (fs.SCHEME.impl) naming the FileSystem
+    implementation class. The URI&#39;s authority is used to determione the host,
+    port, etc. for a file system.<span class='nt'>&lt;/description&gt;</span>
+  <span class='nt'>&lt;/property&gt;</span>
+<span class='nt'>&lt;/configuration&gt;</span>
+</code></pre></div>
+<p>The configuration process also requires to add a <code>mapred.job.tracker</code> property in <code>/usr/local/hadoop/conf/mapred-site.xml</code></p>
+<div class='highlight'><pre><code class='xml'><span class='c'>&lt;!-- Put site-specific property overrides in this file. --&gt;</span>
+<span class='nt'>&lt;configuration&gt;</span>
+  <span class='nt'>&lt;property&gt;</span>
+    <span class='nt'>&lt;name&gt;</span>mapred.job.tracker<span class='nt'>&lt;/name&gt;</span>
+    <span class='nt'>&lt;value&gt;</span>localhost:54311<span class='nt'>&lt;/value&gt;</span>
+    <span class='nt'>&lt;description&gt;</span>The host and port that the MapReduce job tracker runs at. If
+    &quot;local&quot;, then jobs are run in-process as a single map and reduce tasks.
+    <span class='nt'>&lt;/description&gt;</span>
+  <span class='nt'>&lt;/property&gt;</span>
+<span class='nt'>&lt;/configuration&gt;</span>
+</code></pre></div>
+<p>and a <code>dfs.replication</code> property in <code>/usr/local/hadoop/conf/hdfs-site.xml</code></p>
+<div class='highlight'><pre><code class='xml'><span class='c'>&lt;!-- Put site-specific property overrides in this file. --&gt;</span>
+<span class='nt'>&lt;configuration&gt;</span>
+  <span class='nt'>&lt;property&gt;</span>
+    <span class='nt'>&lt;name&gt;</span>dfs.replication<span class='nt'>&lt;/name&gt;</span>
+    <span class='nt'>&lt;value&gt;</span>1<span class='nt'>&lt;/value&gt;</span>
+    <span class='nt'>&lt;description&gt;</span>Default block replication. The actual number of replications
+    can be specified when the file is created. The default is used if
+    replication is not specified in create time.<span class='nt'>&lt;/description&gt;</span>
+  <span class='nt'>&lt;/property&gt;</span>
+<span class='nt'>&lt;/configuration&gt;</span>
+</code></pre></div>
+<h4 id='formatting_the_distributed_file_system'>Formatting the distributed file system</h4>
+
+<p>The last step consists in formatting the file system, operation to be executed as <code>hduser</code>:</p>
+<div class='highlight'><pre><code class='console'><span class='gp'>hduser@manhattan:~$</span> /usr/local/hadoop/bin/hadoop namenode -format
+<span class='go'>23/04/13 16:59:56 INFO namenode.NameNode: STARTUP_MSG:</span>
+<span class='go'>/************************************************************</span>
+<span class='go'>STARTUP_MSG: Starting NameNode</span>
+<span class='go'>STARTUP_MSG:   host = manhattan/127.0.1.1</span>
+<span class='go'>STARTUP_MSG:   args = [-format]</span>
+<span class='go'>STARTUP_MSG:   version = 0.20.205.0</span>
+<span class='go'>STARTUP_MSG:   build = https://svn.apache.org/repos/asf/hadoop/common/branches/branch-0.20-security-205 -r 1179940; compiled by &#39;hortonfo&#39; on Fri Oct 7 06:20:32 UTC 2011</span>
+<span class='go'>************************************************************/</span>
+<span class='go'>23/04/13 16:59:56 INFO util.GSet: VM type       = 64-bit</span>
+<span class='go'>23/04/13 16:59:56 INFO util.GSet: 2% max memory = 19.33375 MB</span>
+<span class='go'>23/04/13 16:59:56 INFO util.GSet: capacity      = 2^21 = 2097152 entries</span>
+<span class='go'>23/04/13 16:59:57 INFO namenode.FSNamesystem: fsOwner=hduser</span>
+<span class='go'>23/04/13 16:59:57 INFO namenode.FSNamesystem: supergroup=supergroup</span>
+<span class='go'>23/04/13 16:59:57 INFO namenode.FSNamesystem: isPermissionEnabled=true</span>
+<span class='go'>23/04/13 16:59:57 INFO namenode.FSNamesystem: dfs.block.invalidate.limit=100</span>
+<span class='go'>23/04/13 16:59:57 INFO namenode.FSNamesystem: isAccessTokenEnabled=false accessKeyUpdateInterval=0 min(s), accessTokenLifetime=0 min(s)</span>
+<span class='go'>23/04/13 16:59:57 INFO common.Storage: Image file of size 112 saved in 0 seconds.</span>
+<span class='go'>23/04/13 16:59:57 INFO common.Storage: Storage directory /opt/hadoop/tmp/dfs/name has been successfully formatted.</span>
+<span class='go'>23/04/13 16:59:56 INFO namenode.NameNode: SHUTDOWN_MSG:</span>
+<span class='go'>/************************************************************</span>
+<span class='go'>SHUTDOWN_MSG: Shutting down NameNode at manhattan/127.0.1.1</span>
+<span class='go'>************************************************************/</span>
+<span class='gp'>hduser@manhattan:~$</span>
+</code></pre></div>
+<h4 id='and_thats_it'>And&#8230; that&#8217;s it!</h4>
+
+<p>Hadoop is now installed. The scripts <code>/usr/local/hadoop/bin/start-all.sh</code> and <code>/usr/local/hadoop/bin/stop-all.sh</code> respectively start and stop all processes related to Hadoop.</p>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2013/01/19/my-first-post" title="Let me introduce... my blog">&larr; Previous</a></li>
+      
+        <li><a href="/archive.html">Archive</a></li>
+      
+        <li class="next"><a href="/2014/06/05/installing-ipython-virtualenv-numpy-scipy-and-all-that-on-mavericks" title="Installing ipython, virtualenv, numpy, scipy and all that on Mavericks">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'malchiodi'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Dario Malchiodi 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+  </body>
+</html>
+

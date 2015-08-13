@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+ 
+ <title>MalchioLog</title>
+ <link href="http://dariomalchiodi.github.com/atom.xml" rel="self"/>
+ <link href="http://dariomalchiodi.github.com"/>
+ <updated>2014-11-04T22:49:32+01:00</updated>
+ <id>http://dariomalchiodi.github.com</id>
+ <author>
+   <name>Dario Malchiodi</name>
+   <email>malchiodi@di.unimi.it</email>
+ </author>
+
+ 
+ <entry>
+   <title>Installing hadoop 2.4.0 from scratch (2014 version)</title>
+   <link href="http://dariomalchiodi.github.com/2014/10/09/installing-hadoop-240-from-scratch-2014-version"/>
+   <updated>2014-10-09T00:00:00+02:00</updated>
+   <id>http://dariomalchiodi.github.com/2014/10/09/installing-hadoop-240-from-scratch-2014-version</id>
+   <content type="html">&lt;p&gt;In a&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Installing ipython, virtualenv, numpy, scipy and all that on Mavericks</title>
+   <link href="http://dariomalchiodi.github.com/2014/06/05/installing-ipython-virtualenv-numpy-scipy-and-all-that-on-mavericks"/>
+   <updated>2014-06-05T00:00:00+02:00</updated>
+   <id>http://dariomalchiodi.github.com/2014/06/05/installing-ipython-virtualenv-numpy-scipy-and-all-that-on-mavericks</id>
+   <content type="html">&lt;p&gt;After upgrading my iMac to Mavericks I found out that my python environment was totally messed up, notably with ipython and virtualenv crashing at launch. I ended up to use my laptop to keep on with python development until I decided to perform a fresh install of the whole programming environment. I found out a wonderful &lt;a href='http://
+joernhees.de/blog/2014/02/25/scientific-python-on-mac-os-x-10-9-with-homebrew'&gt;blog post&lt;/a&gt; detailing all the steps needed to organize such an install via &lt;a href='
+http://http://brew.sh'&gt;homebrew&lt;/a&gt;.&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Installing hadoop from scratch. And I mean it</title>
+   <link href="http://dariomalchiodi.github.com/2013/03/24/installing-hadoop-from-scratch-and-i-mean-it"/>
+   <updated>2013-03-24T00:00:00+01:00</updated>
+   <id>http://dariomalchiodi.github.com/2013/03/24/installing-hadoop-from-scratch-and-i-mean-it</id>
+   <content type="html">&lt;p&gt;This year I started a new course on &lt;a href='http://malchiodi.di.unimi.it/teaching/big-scale-analytics'&gt;Big scale analytics&lt;/a&gt;, and the first tool I introduced students to is, not surprisingly, &lt;a href='http://hadoop.apache.org/'&gt;Hadoop&lt;/a&gt;. Having pointed out that this tool is useful when run on a significant cluster, I nonetheless wanted students to be able to install their own copy of the software even on a single-node cluster. Maybe some among them will have sometime to run a cluster on their own. Moreover (and most importantly), this will let them to autonomously run a job, experiment and debug on small scale before sending everything, for instance, to &lt;a href='http://aws.amazon.com'&gt;AWS&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;I opted for a VM-based solution, so that most of hardware and OS issues students would face would be limited to installing and configuring the VM manager. For the records, I am running Mac OS X 10.7.5 and relying on &lt;a href='https://www.virtualbox.org/'&gt;VirtualBox&lt;/a&gt; 4.2.8. The rest of this post documents the steps I followed to get a single-node Hadoop cluster running.&lt;/p&gt;
+
+&lt;p&gt;First of all, I downloaded the ISO image for Ubuntu server 12.10 at the &lt;a href='http://www.ubuntu.com/download/server'&gt;Ubuntu server download page&lt;/a&gt; and created a Linux-Ubuntu based VM in VirtualBox with default settings (that is, 512 MB of RAM and a 8GB VDI-based HD, dynamically allocated) and a DVD preloaded with the Ubuntu server 12.10 ISO image. Then I ran the VM and followed all default installation options, except for keyboard layout (I use an italian keyboard). I did not install any additional software, with the exception of manual package installation support.&lt;/p&gt;
+
+&lt;p&gt;Once the system was up and running, I installed Hadoop (almost) following the instructions in the &lt;a href='http://www.michael-noll.com/tutorials/running-hadoop-on-ubuntu-linux-single-node-cluster/'&gt;tutorial written by Michael Noll&lt;/a&gt;, that is what follows.&lt;/p&gt;
+
+&lt;p&gt;Some details about the examples: the host name is &lt;code&gt;manhattan&lt;/code&gt;, with an administrator user with login name &lt;code&gt;boss&lt;/code&gt;; three points (&lt;code&gt;...&lt;/code&gt;) in a console are used in order to skip verbose output.&lt;/p&gt;
+
+&lt;h4 id='installing_java'&gt;Installing Java&lt;/h4&gt;
+
+&lt;p&gt;The mentioned tutorial suggest a potentially unsafe procedure in order to install the jdk through &lt;code&gt;apt-get&lt;/code&gt;, thus I opted for a manual installation:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='console'&gt;&lt;span class='gp'&gt;boss@manhattan:~$&lt;/span&gt; wget --no-cookies --header &lt;span class='s2'&gt;&amp;quot;Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com&amp;quot;&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;http://download.oracle.com/otn-pub/java/jdk/7/jdk-7-linux-x64.tar.gz&amp;quot;&lt;/span&gt;
+&lt;span class='go'&gt;...&lt;/span&gt;
+&lt;span class='gp'&gt;boss@manhattan:~$&lt;/span&gt; tar -xvf jdk-7-linux-x64.tar.gz
+&lt;span class='go'&gt;...&lt;/span&gt;
+&lt;span class='gp'&gt;boss@manhattan:~$&lt;/span&gt; sudo mkdir -p /usr/lib/jvm/jdk1.7.0 
+&lt;span class='gp'&gt;boss@manhattan:~$&lt;/span&gt; sudo mv jdk1.7.0_03/* /usr/lib/jvm/jdk1.7.0/
+&lt;span class='gp'&gt;boss@manhattan:~$&lt;/span&gt; sudo update-alternatives --install &lt;span class='s2'&gt;&amp;quot;/usr/bin/java&amp;quot;&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;java&amp;quot;&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;/usr/lib/jvm/jdk1.7.0/bin/java&amp;quot;&lt;/span&gt; 1
+&lt;span class='go'&gt;...&lt;/span&gt;
+&lt;span class='gp'&gt;boss@manhattan:~$&lt;/span&gt; sudo update-alternatives --install &lt;span class='s2'&gt;&amp;quot;/usr/bin/javac&amp;quot;&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;javac&amp;quot;&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;/usr/lib/jvm/jdk1.7.0/bin/javac&amp;quot;&lt;/span&gt; 1
+&lt;span class='go'&gt;...&lt;/span&gt;
+&lt;span class='gp'&gt;boss@manhattan:~$&lt;/span&gt; sudo update-alternatives --install &lt;span class='s2'&gt;&amp;quot;/usr/bin/javaws&amp;quot;&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;javaws&amp;quot;&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;/usr/lib/jvm/jdk1.7.0/bin/javaws&amp;quot;&lt;/span&gt; 1
+&lt;span class='go'&gt;...&lt;/span&gt;
+&lt;span class='gp'&gt;boss@manhattan:~$&lt;/span&gt; javac -version
+&lt;span class='go'&gt;javac 1.7.0&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4 id='adding_a_dedicated_user'&gt;Adding a dedicated user&lt;/h4&gt;
+
+&lt;p&gt;It is advisable not to run Hadoop services through a general-purpose user, so the next step consists in adding a group &lt;code&gt;hadoop&lt;/code&gt; and a user &lt;code&gt;hduser&lt;/code&gt; belonging to that group.&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='console'&gt;&lt;span class='gp'&gt;boss@manhattan:~$&lt;/span&gt; sudo addgroup hadoop
+&lt;span class='go'&gt;...&lt;/span&gt;
+&lt;span class='gp'&gt;boss@manhattan:~$&lt;/span&gt; sudo adduser --ingroup hadoop hduser
+&lt;span class='go'&gt;...&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4 id='setup_ssh'&gt;Setup SSH&lt;/h4&gt;
+
+&lt;p&gt;All communications with Hadoop are encrypted via SSH, thus the corresponding server should be installed:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='console'&gt;&lt;span class='gp'&gt;boss@manhattan:~$&lt;/span&gt; sudo apt-get install openssh-server
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;and the &lt;code&gt;hduser&lt;/code&gt; must be associated to a key pair and subsequently granting its access to the local machine:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='console'&gt;&lt;span class='gp'&gt;boss@manhattan:~$&lt;/span&gt; su - hduser
+&lt;span class='gp'&gt;hduser@manhattan:~$&lt;/span&gt; ssh-keygen -t rsa -P &lt;span class='s2'&gt;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class='go'&gt;Generating public/private rsa key pair.&lt;/span&gt;
+&lt;span class='go'&gt;...&lt;/span&gt;
+&lt;span class='go'&gt;The key&amp;#39;s randomart image is:&lt;/span&gt;
+&lt;span class='go'&gt;...&lt;/span&gt;
+&lt;span class='gp'&gt;hduser@manhattan:~$&lt;/span&gt; cat &lt;span class='nv'&gt;$HOME&lt;/span&gt;/.ssh/id_rsa.pub &amp;gt;&amp;gt; &lt;span class='nv'&gt;$HOME&lt;/span&gt;/.ssh/authorized_keys
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now the &lt;code&gt;hduser&lt;/code&gt; should be able to access via ssh to &lt;code&gt;localhost&lt;/code&gt;:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='console'&gt;&lt;span class='gp'&gt;hduser@manhattan:~$&lt;/span&gt; ssh localhost
+&lt;span class='go'&gt;The authenticity of host &amp;#39;localhost (::1)&amp;#39; can&amp;#39;t be established.&lt;/span&gt;
+&lt;span class='go'&gt;...&lt;/span&gt;
+&lt;span class='go'&gt;Last login: ...&lt;/span&gt;
+&lt;span class='gp'&gt;$&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4 id='disable_ipv6'&gt;Disable IPV6&lt;/h4&gt;
+
+&lt;p&gt;Hadoop and IPV6 do not agree on the meaning of &lt;code&gt;0.0.0.0&lt;/code&gt; address, thus it is adivsable to disable IPV6 adding the following lines at the end of &lt;code&gt;/etc/sysctl.conf&lt;/code&gt; (after having switched to the &lt;code&gt;boss&lt;/code&gt; user):&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='properties'&gt;&lt;span class='c'&gt;# disable ipv6&lt;/span&gt;
+&lt;span class='na'&gt;net.ipv6.conf.all.disable_ipv6&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='s'&gt;1&lt;/span&gt;
+&lt;span class='na'&gt;net.ipv6.conf.default.disable_ipv6&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='s'&gt;1&lt;/span&gt;
+&lt;span class='na'&gt;net.ipv6.conf.lo.disable_ipv6&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='s'&gt;1&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;After a system reboot the output of &lt;code&gt;cat /proc/sys/net/ipv6/conf/all/disable_ipv6&lt;/code&gt; should be &lt;code&gt;1&lt;/code&gt;, meaning that IPV6 is actually disabled.&lt;/p&gt;
+
+&lt;h3 id='hadoop'&gt;Hadoop&lt;/h3&gt;
+
+&lt;h4 id='download_and_install_hadoop'&gt;Download and install Hadoop&lt;/h4&gt;
+
+&lt;p&gt;Download &lt;a href='http://archive.apache.org/dist/hadoop/core/hadoop-0.20.205.0/hadoop-0.20.205.0.tar.gz'&gt;hadoop-0.20.205.0.tar.gz&lt;/a&gt;, unpack it and move the results in &lt;code&gt;/usr/local&lt;/code&gt;, adding a symlink using the more friendly name &lt;code&gt;hadoop&lt;/code&gt; and changing ownership to the &lt;code&gt;hduser&lt;/code&gt; user:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='console'&gt;&lt;span class='gp'&gt;boss@manhattan:~$&lt;/span&gt; wget http://archive.apache.org/dist/hadoop/core/hadoop-0.20.205.0/hadoop-0.20.205.0.tar.gz
+&lt;span class='go'&gt;...&lt;/span&gt;
+&lt;span class='gp'&gt;boss@manhattan:~$&lt;/span&gt; sudo tar xzf hadoop-0.20.205.0.tar.gz
+&lt;span class='gp'&gt;boss@manhattan:~$&lt;/span&gt; sudo mv hadoop-0.20.205.0 /usr/local/hadoop-0.20.205.0
+&lt;span class='gp'&gt;boss@manhattan:~$&lt;/span&gt; &lt;span class='nb'&gt;cd&lt;/span&gt; /usr/local
+&lt;span class='gp'&gt;boss@manhattan:/usr/local$&lt;/span&gt; sudo ln -s hadoop-0.20.205.0 hadoop
+&lt;span class='gp'&gt;boss@manhattan:/usr/local$&lt;/span&gt; sudo chown -R hduser:hadoop hadoop
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4 id='setup_the_dedicated_user_environment'&gt;Setup the dedicated user environment&lt;/h4&gt;
+
+&lt;p&gt;Switch to the &lt;code&gt;hduser&lt;/code&gt; user and add the following lines at the end of the &lt;code&gt;.bashrc&lt;/code&gt; file:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='sh'&gt;&lt;span class='c'&gt;# Set Hadoop-related environment variables&lt;/span&gt;
+&lt;span class='nb'&gt;export &lt;/span&gt;&lt;span class='nv'&gt;HADOOP_PREFIX&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;/usr/local/hadoop
+
+&lt;span class='c'&gt;# Set JAVA_HOME&lt;/span&gt;
+&lt;span class='nb'&gt;export &lt;/span&gt;&lt;span class='nv'&gt;JAVA_HOME&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;/usr/lib/jvm/jdk1.7.0
+
+&lt;span class='c'&gt;# Some convenient aliases and functions for running Hadoop-related commands&lt;/span&gt;
+&lt;span class='nb'&gt;unalias &lt;/span&gt;fs &amp;amp;&amp;gt; /dev/null
+&lt;span class='nb'&gt;alias &lt;/span&gt;&lt;span class='nv'&gt;fs&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='s2'&gt;&amp;quot;hadoop fs&amp;quot;&lt;/span&gt;
+&lt;span class='nb'&gt;unalias &lt;/span&gt;hls &amp;amp;&amp;gt; /dev/null
+&lt;span class='nb'&gt;alias &lt;/span&gt;&lt;span class='nv'&gt;hls&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='s2'&gt;&amp;quot;fs -ls&amp;quot;&lt;/span&gt;
+
+&lt;span class='c'&gt;# Add Hadoop bin/ directory to PATH&lt;/span&gt;
+&lt;span class='nb'&gt;export &lt;/span&gt;&lt;span class='nv'&gt;PATH&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='nv'&gt;$PATH&lt;/span&gt;:&lt;span class='nv'&gt;$HADOOP_PREFIX&lt;/span&gt;/bin
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;get back to the administrator user, then open &lt;code&gt;/usr/local/hadoop/conf/hadoop-env.sh&lt;/code&gt;, uncomment the line setting &lt;code&gt;JAVA_HOME&lt;/code&gt; and set its value to the jdk directory:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='sh'&gt;&lt;span class='nb'&gt;export &lt;/span&gt;&lt;span class='nv'&gt;JAVA_HOME&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;/usr/lib/jvm/jdk1.7.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4 id='configure_hadoop'&gt;Configure Hadoop&lt;/h4&gt;
+
+&lt;p&gt;First of all, a directory for temporary data generated by Hadoop should be in place, with proper access rights:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='console'&gt;&lt;span class='gp'&gt;boss@manhattan:~$&lt;/span&gt; sudo mkdir -p /opt/hadoop/tmp
+&lt;span class='gp'&gt;boss@manhattan:~$&lt;/span&gt; sudo chown hduser:hadoop /opt/hadoop/tmp
+&lt;span class='gp'&gt;boss@manhattan:~$&lt;/span&gt; sudo chmod 750 /opt/hadoop/tmp
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This directory should be specified as value for the &lt;code&gt;hadoop.tmp.dir&lt;/code&gt; property in file &lt;code&gt;/usr/local/hadoop/conf/core-site.xml&lt;/code&gt;. Note that this file will likely contain only an empty &lt;code&gt;configuration&lt;/code&gt; tag, within which a &lt;code&gt;property&lt;/code&gt; tag should be nested:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='xml'&gt;&lt;span class='c'&gt;&amp;lt;!-- Put site-specific property overrides in this file. --&amp;gt;&lt;/span&gt;
+&lt;span class='nt'&gt;&amp;lt;configuration&amp;gt;&lt;/span&gt;
+  &lt;span class='nt'&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
+    &lt;span class='nt'&gt;&amp;lt;name&amp;gt;&lt;/span&gt;hadoop.tmp.dir&lt;span class='nt'&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+    &lt;span class='nt'&gt;&amp;lt;value&amp;gt;&lt;/span&gt;/opt/hadoop/tmp&lt;span class='nt'&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
+    &lt;span class='nt'&gt;&amp;lt;description&amp;gt;&lt;/span&gt;A base for other temporary directories&lt;span class='nt'&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
+  &lt;span class='nt'&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
+  &lt;span class='nt'&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
+    &lt;span class='nt'&gt;&amp;lt;name&amp;gt;&lt;/span&gt;fs.default.name&lt;span class='nt'&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+    &lt;span class='nt'&gt;&amp;lt;value&amp;gt;&lt;/span&gt;hdfs://localhost:54310&lt;span class='nt'&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
+    &lt;span class='nt'&gt;&amp;lt;description&amp;gt;&lt;/span&gt;The name of the default file system. A URI whose scheme and
+    authority determine the FileSystem implementation. The URI&amp;#39;s scheme
+    determines the config property (fs.SCHEME.impl) naming the FileSystem
+    implementation class. The URI&amp;#39;s authority is used to determione the host,
+    port, etc. for a file system.&lt;span class='nt'&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
+  &lt;span class='nt'&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
+&lt;span class='nt'&gt;&amp;lt;/configuration&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The configuration process also requires to add a &lt;code&gt;mapred.job.tracker&lt;/code&gt; property in &lt;code&gt;/usr/local/hadoop/conf/mapred-site.xml&lt;/code&gt;&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='xml'&gt;&lt;span class='c'&gt;&amp;lt;!-- Put site-specific property overrides in this file. --&amp;gt;&lt;/span&gt;
+&lt;span class='nt'&gt;&amp;lt;configuration&amp;gt;&lt;/span&gt;
+  &lt;span class='nt'&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
+    &lt;span class='nt'&gt;&amp;lt;name&amp;gt;&lt;/span&gt;mapred.job.tracker&lt;span class='nt'&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+    &lt;span class='nt'&gt;&amp;lt;value&amp;gt;&lt;/span&gt;localhost:54311&lt;span class='nt'&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
+    &lt;span class='nt'&gt;&amp;lt;description&amp;gt;&lt;/span&gt;The host and port that the MapReduce job tracker runs at. If
+    &amp;quot;local&amp;quot;, then jobs are run in-process as a single map and reduce tasks.
+    &lt;span class='nt'&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
+  &lt;span class='nt'&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
+&lt;span class='nt'&gt;&amp;lt;/configuration&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;and a &lt;code&gt;dfs.replication&lt;/code&gt; property in &lt;code&gt;/usr/local/hadoop/conf/hdfs-site.xml&lt;/code&gt;&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='xml'&gt;&lt;span class='c'&gt;&amp;lt;!-- Put site-specific property overrides in this file. --&amp;gt;&lt;/span&gt;
+&lt;span class='nt'&gt;&amp;lt;configuration&amp;gt;&lt;/span&gt;
+  &lt;span class='nt'&gt;&amp;lt;property&amp;gt;&lt;/span&gt;
+    &lt;span class='nt'&gt;&amp;lt;name&amp;gt;&lt;/span&gt;dfs.replication&lt;span class='nt'&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+    &lt;span class='nt'&gt;&amp;lt;value&amp;gt;&lt;/span&gt;1&lt;span class='nt'&gt;&amp;lt;/value&amp;gt;&lt;/span&gt;
+    &lt;span class='nt'&gt;&amp;lt;description&amp;gt;&lt;/span&gt;Default block replication. The actual number of replications
+    can be specified when the file is created. The default is used if
+    replication is not specified in create time.&lt;span class='nt'&gt;&amp;lt;/description&amp;gt;&lt;/span&gt;
+  &lt;span class='nt'&gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
+&lt;span class='nt'&gt;&amp;lt;/configuration&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4 id='formatting_the_distributed_file_system'&gt;Formatting the distributed file system&lt;/h4&gt;
+
+&lt;p&gt;The last step consists in formatting the file system, operation to be executed as &lt;code&gt;hduser&lt;/code&gt;:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='console'&gt;&lt;span class='gp'&gt;hduser@manhattan:~$&lt;/span&gt; /usr/local/hadoop/bin/hadoop namenode -format
+&lt;span class='go'&gt;23/04/13 16:59:56 INFO namenode.NameNode: STARTUP_MSG:&lt;/span&gt;
+&lt;span class='go'&gt;/************************************************************&lt;/span&gt;
+&lt;span class='go'&gt;STARTUP_MSG: Starting NameNode&lt;/span&gt;
+&lt;span class='go'&gt;STARTUP_MSG:   host = manhattan/127.0.1.1&lt;/span&gt;
+&lt;span class='go'&gt;STARTUP_MSG:   args = [-format]&lt;/span&gt;
+&lt;span class='go'&gt;STARTUP_MSG:   version = 0.20.205.0&lt;/span&gt;
+&lt;span class='go'&gt;STARTUP_MSG:   build = https://svn.apache.org/repos/asf/hadoop/common/branches/branch-0.20-security-205 -r 1179940; compiled by &amp;#39;hortonfo&amp;#39; on Fri Oct 7 06:20:32 UTC 2011&lt;/span&gt;
+&lt;span class='go'&gt;************************************************************/&lt;/span&gt;
+&lt;span class='go'&gt;23/04/13 16:59:56 INFO util.GSet: VM type       = 64-bit&lt;/span&gt;
+&lt;span class='go'&gt;23/04/13 16:59:56 INFO util.GSet: 2% max memory = 19.33375 MB&lt;/span&gt;
+&lt;span class='go'&gt;23/04/13 16:59:56 INFO util.GSet: capacity      = 2^21 = 2097152 entries&lt;/span&gt;
+&lt;span class='go'&gt;23/04/13 16:59:57 INFO namenode.FSNamesystem: fsOwner=hduser&lt;/span&gt;
+&lt;span class='go'&gt;23/04/13 16:59:57 INFO namenode.FSNamesystem: supergroup=supergroup&lt;/span&gt;
+&lt;span class='go'&gt;23/04/13 16:59:57 INFO namenode.FSNamesystem: isPermissionEnabled=true&lt;/span&gt;
+&lt;span class='go'&gt;23/04/13 16:59:57 INFO namenode.FSNamesystem: dfs.block.invalidate.limit=100&lt;/span&gt;
+&lt;span class='go'&gt;23/04/13 16:59:57 INFO namenode.FSNamesystem: isAccessTokenEnabled=false accessKeyUpdateInterval=0 min(s), accessTokenLifetime=0 min(s)&lt;/span&gt;
+&lt;span class='go'&gt;23/04/13 16:59:57 INFO common.Storage: Image file of size 112 saved in 0 seconds.&lt;/span&gt;
+&lt;span class='go'&gt;23/04/13 16:59:57 INFO common.Storage: Storage directory /opt/hadoop/tmp/dfs/name has been successfully formatted.&lt;/span&gt;
+&lt;span class='go'&gt;23/04/13 16:59:56 INFO namenode.NameNode: SHUTDOWN_MSG:&lt;/span&gt;
+&lt;span class='go'&gt;/************************************************************&lt;/span&gt;
+&lt;span class='go'&gt;SHUTDOWN_MSG: Shutting down NameNode at manhattan/127.0.1.1&lt;/span&gt;
+&lt;span class='go'&gt;************************************************************/&lt;/span&gt;
+&lt;span class='gp'&gt;hduser@manhattan:~$&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4 id='and_thats_it'&gt;And&amp;#8230; that&amp;#8217;s it!&lt;/h4&gt;
+
+&lt;p&gt;Hadoop is now installed. The scripts &lt;code&gt;/usr/local/hadoop/bin/start-all.sh&lt;/code&gt; and &lt;code&gt;/usr/local/hadoop/bin/stop-all.sh&lt;/code&gt; respectively start and stop all processes related to Hadoop.&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Let me introduce... my blog</title>
+   <link href="http://dariomalchiodi.github.com/2013/01/19/my-first-post"/>
+   <updated>2013-01-19T00:00:00+01:00</updated>
+   <id>http://dariomalchiodi.github.com/2013/01/19/my-first-post</id>
+   <content type="html">&lt;p&gt;I decided to set up this blog mostly with the aim of writing down install instructions as neat as possible for the software I use, so I (hopefully) can save time when setup a new computer. So, why don&amp;#8217;t describe the technology behind the blog itself as a first post?&lt;/p&gt;
+
+&lt;p&gt;Quick and dirty: the blog is a set of &lt;a href='http://en.wikipedia.org/wiki/HTML'&gt;HTML&lt;/a&gt; pages, styled through &lt;a href='http://twitter.github.com/bootstrap/'&gt;Bootstrap&lt;/a&gt;, hosted on &lt;a href='http://github.com'&gt;github&lt;/a&gt; statically generated through &lt;a href='http://jekyllrb.com'&gt;Jekyll&lt;/a&gt; using the twitter theme for the &lt;a href='http://jekyllbootstrap.com'&gt;Jekyll-Bootstrap&lt;/a&gt; framework, with comments support provided by &lt;a href='http://diqus.com'&gt;Disqus&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Let me explain all this with a bit more of detail. The site contents are not dynamically generated or read from a database: the actual HTML code your browser is rendering is stored somewhere at github. The other endpoint is a set of text files holding the blog contents, encoded using the markdown language. These files are sent from my computer to the github server, where a text processor called Jekyll transforms them into HTML code.&lt;/p&gt;
+
+&lt;p&gt;Although the not so low number of involved software, the required installation is relatively simple, and basically follows the workflow described in the &lt;a href='http://jekyllbootstrap.com'&gt;Jekyll-Bootstrap site&lt;/a&gt; and in a specific &lt;a href='http://erjjones.github.com/blog/How-I-built-my-blog-in-one-day'&gt;post from Eric Jones&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;I&amp;#8217;ll assume you have a working knowledge of version control systems, you are comfortable with git and you have a github account. If not, google for a git tutorial (for instance &lt;a href='http://learn.github.com/p/intro.html'&gt;this one&lt;/a&gt;), &lt;a href='http://try.github.com'&gt;play around for a while&lt;/a&gt;, and &lt;a href='http://github.com/signup'&gt;set up&lt;/a&gt; a github account. I&amp;#8217;ll also assume you have an updated version of Ruby on your system (execute &lt;code&gt;sudo gem update --system&lt;/code&gt; to check for updates on your Ruby installation)&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Once logged into github, create a new repository named &lt;code&gt;YOURUSERNAME.github.com&lt;/code&gt;, where &lt;code&gt;YOURUSERNAME&lt;/code&gt; should be replaced by your actual github user name (in this step as well as in all subsequent occurrences of &lt;code&gt;YOURUSERNAME&lt;/code&gt;. Don&amp;#8217;t let github add a README.md file, or you&amp;#8217;ll run into a conflict later on.&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;Position yourself in a suitable place of your file system, and clone locally Jekyll-Bootstrap in a directory named &lt;code&gt;YOURUSERNAME.github.com&lt;/code&gt;, then &lt;code&gt;cd&lt;/code&gt; in that directory:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ git clone https://github.com/plusjade/jekyll-bootstrap.git YOURUSERNAME.github.com
+$ cd YOURUSERNAME.github.com&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;Associate the downloaded software with your github repository and push it:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ git remote set-url origin git@github.com:YOURUSERNAME/YOURUSERNAME.github.com.git
+$ git push origin master&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;At this point, all the essential software is installed: point your browser to &lt;code&gt;http://YOURUSERNAME.github.com&lt;/code&gt; and you should see the Jekyll-Bootstrap template Web site. Note that generating the online web site could require up to some minutes, so don&amp;#8217;t worry you don&amp;#8217;t see your site immediately.&lt;/p&gt;
+
+&lt;p&gt;Unless you really like to live dangerously, it is wise to work on a development site instead of directly modify the publicly available site. Thus, it is strongly recommended that you also install a local copy of Jekyll, which installs as a Ruby gem:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='sh'&gt;&lt;span class='nv'&gt;$ &lt;/span&gt;sudo gem install jekyll
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;When this step completes (and this could require some time), you can run a Jekyll server:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='sh'&gt;&lt;span class='nv'&gt;$ &lt;/span&gt;jekyll --server
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;It is important that the latter operation is executed within the &lt;code&gt;YOURUSERNAME.github.com&lt;/code&gt; directory: this will allow Jekyll-Bootstrap to read its contents and convert them into a Web site locally available at the address &lt;code&gt;localhost:4000&lt;/code&gt;. The conversion works as follows: all files whose name does not start with an underscore are read and trasformed using:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;a &lt;a href='http://daringfireball.net/projects/markdown/'&gt;Markdown&lt;/a&gt; parser in order to handle the static part of the site contents: this allows blog entries to be written even without knowing anything about HTML, but simply rendering structure and formatting through a simple &lt;a href='http://daringfireball.net/projects/markdown/syntax'&gt;textual-based syntax&lt;/a&gt;;&lt;/li&gt;
+
+&lt;li&gt;the &lt;a href='http://liquidmarkup.org/'&gt;Liquid templating engine&lt;/a&gt; with the aim of rendering the dynamic part of the site and factoring common and repeated parts.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;All files whose name begins with an underscore is left untouched. Such files contain configuration options, assets such as CSS and JS, templates and so on. In particular, under &lt;code&gt;_site&lt;/code&gt; you&amp;#8217;ll find a copy of the generated Web site.&lt;/p&gt;
+
+&lt;p&gt;The Jekyll server is aware of file modification, so the locally served Web site is always updated. Also in this case, the Web site generation requires some time, although sensibly lower than required when publishing online. Roughly speaking, the new content will usually show up when the page is reloaded once or twice.&lt;/p&gt;
+
+&lt;p&gt;You can google tutorials or cheat sheets for the syntax of both tools. Just to give a first reference, you can read the &lt;a href='http://daringfireball.net/projects/markdown/'&gt;Markdown tutorial by John Gruber&lt;/a&gt; and the &lt;a href='https://github.com/Shopify/liquid/wiki/Liquid-for-Designers'&gt;Liquid for Designers&lt;/a&gt; section of the Shopify site on github.&lt;/p&gt;
+
+&lt;p&gt;Content can be added either as a new post or a new page: the former is the usual atomic content of a blog, while the latter represents a site page, such as a Bio, an archive of past posts and so on. The syntax for adding both elements is similar, and is based on &lt;code&gt;rake&lt;/code&gt;, a building tool analogous to &lt;code&gt;make&lt;/code&gt; but relying on Ruby:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='sh'&gt;&lt;span class='nv'&gt;$ &lt;/span&gt;rake post &lt;span class='nv'&gt;title&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='s2'&gt;&amp;quot;TITLE&amp;quot;&lt;/span&gt;
+&lt;span class='nv'&gt;$ &lt;/span&gt;rake page &lt;span class='nv'&gt;name&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='s2'&gt;&amp;quot;NAME&amp;quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The text within double quotes represents the title of the post in the first example, and the name of the markdown file containing the page description in the second one. Created pages will reside in the home directory, unless the specified name is a pathname, while posts are placed in the &lt;code&gt;_posts&lt;/code&gt; directory, in files named aggregating the current date and the specified title. It is precisely this file which you&amp;#8217;ll have to edit, possibly using Markdown syntax, in order to insert the actual post content.&lt;/p&gt;
+
+&lt;p&gt;Once you are satisfied with your blog, publishing it online is simply a matter of committing and pushing your repository:&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='sh'&gt;&lt;span class='nv'&gt;$ &lt;/span&gt;git add .
+&lt;span class='nv'&gt;$ &lt;/span&gt;git commit -m &lt;span class='s2'&gt;&amp;quot;Added new content&amp;quot;&lt;/span&gt;
+&lt;span class='nv'&gt;$ &lt;/span&gt;git push origin master
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Another operation worth considering is that of customizing your blog: this will likely require to write general information and setting into &lt;code&gt;_config.yml&lt;/code&gt; and to modify files in the &lt;code&gt;_layouts&lt;/code&gt; and &lt;code&gt;_includes&lt;/code&gt; directories. The &lt;a href='http://jekyllbootstrap.com/usage/blog-configuration.html'&gt;Jekyll-Bootstrap site&lt;/a&gt; and the &lt;a href='http://erjjones.github.com/blog/How-I-built-my-blog-in-one-day'&gt;Eric Jones&amp;#8217; blog&lt;/a&gt; represent valuable resources. The only things I did not find there are the following ones.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;The CSS provided with the downloaded version of Jekyll-Bootstrap is not responsive, that is it refers to a fixed layout requiring to horizontally scroll the browser contents if its window is too narrow. This is particularly annoying when browsing through a device with limited screen size, such as a smartphone. The solution to this problem is that of replacing the file &lt;code&gt;assets/themes/twitter/bootstrap/css/bootstrap.min.css&lt;/code&gt; with a customized version built and downloaded from the &lt;a href='http://twitter.github.com/bootstrap/customize.html'&gt;Bootstrap site&lt;/a&gt; (be sure to select the options in the &lt;em&gt;Responsive&lt;/em&gt; section).&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;Source code highlighting needs to be explicitly turned on. This requires to install &lt;a href='http://pygments.org'&gt;pygments&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ sudo easy_install Pygments&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;(using one of the methods in section &lt;em&gt;Pygments&lt;/em&gt; of the &lt;a href='https://github.com/mojombo/jekyll/wiki/Install'&gt;Jekyll site&lt;/a&gt; if &lt;code&gt;easy_instal&lt;/code&gt; is not available), and to create a CSS file containing the source code formatting rules&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; $ pygmentize -S default -f html &amp;gt; assets/css/pygments.css&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This file has to be copied in the &lt;code&gt;assets/themes/twitter/css&lt;/code&gt; directory and referenced in &lt;code&gt;_includes/themes/twitter/default.html&lt;/code&gt; through a &lt;code&gt;link&lt;/code&gt; tag:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; &amp;lt;link href=&amp;quot;{{ ASSET_PATH }}/css/syntax.css&amp;quot; rel=&amp;quot;stylesheet&amp;quot; type=&amp;quot;text/css&amp;quot; media=&amp;quot;all&amp;quot;&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;This last point is not explicitly connected with Jekyll-Bootstrap, but it&amp;#8217;s a part of what I wanted as default facility in my blog, that is proper mathematical formatting. My choice is &lt;a href='http://www.mathjax.org'&gt;MathJax&lt;/a&gt;, which does not (necessarily) require local installation: it&amp;#8217;s just a matter of remotely including the following javascript code into &lt;code&gt;_includes/themes/twitterdefault.html&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;script type=&amp;quot;text/javascript&amp;quot; src=&amp;quot;https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;which is ugly, but is the only safe way currently provided to avoid man-in-the-middle attacks. But in the end, this will allow your posts to have nice formulas such as&lt;/p&gt;
+
+&lt;p&gt;$$ \frac{1}{\sqrt{2 \pi} \sigma} \int_{-\infty}^{+\infty} \mathrm e^{\frac{(x - \mu)^2}{2 \sigma^2}} \mathrm d x = 1 $$&lt;/p&gt;
+
+&lt;p&gt;Remeber, though, that inline equations should escape backslash in delimiters, thus using &lt;code&gt;\\(&lt;/code&gt; and &lt;code&gt;\\)&lt;/code&gt;instead of &lt;code&gt;\(&lt;/code&gt; and &lt;code&gt;\)&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;</content>
+ </entry>
+ 
+ 
+</feed>

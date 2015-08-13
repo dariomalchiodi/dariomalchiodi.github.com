@@ -1,0 +1,275 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Let me introduce... my blog</title>
+    <meta name="description" content="">
+    <meta name="author" content="Dario Malchiodi">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/twitter/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/twitter/css/pygments.css" rel="stylesheet" type="text/css" media="all">
+
+    <script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">MalchioLog</a>
+          <ul class="nav">
+            <!-- 
+            
+            
+
+
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/archive.html">Archive</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/categories.html">Categories</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/pages.html">Pages</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags.html">Tags</a></li>
+      	
+      
+    
+  
+
+
+ -->
+            <li><a href="about.html">About</a></li>
+            <li><a href="archive.html">Archive</a></li>
+            <li><a href="categories.html">Categories</a></li>
+            <li><a href="tags.html">Tags</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>Let me introduce... my blog <small></small></h1>
+    <div class="date"><strong>Published</strong> 19 January 2013</div>
+
+  
+    <strong>Categories</strong>:
+     <a href="/tags/" rel="tooltip" title="View posts tagged with &quot;&quot;">General</a>   
+  
+  <br>
+  
+    <strong>Tags</strong>:
+     <a href="/tags/Blog" rel="tooltip" title="View posts tagged with &quot;Blog&quot;">Blog</a>   –   <a href="/tags/Jekyll" rel="tooltip" title="View posts tagged with &quot;Jekyll&quot;">Jekyll</a>   –   <a href="/tags/Bootstrap" rel="tooltip" title="View posts tagged with &quot;Bootstrap&quot;">Bootstrap</a>   –   <a href="/tags/Markdown" rel="tooltip" title="View posts tagged with &quot;Markdown&quot;">Markdown</a>   –   <a href="/tags/Liquid" rel="tooltip" title="View posts tagged with &quot;Liquid&quot;">Liquid</a>   
+  
+  </div>
+
+<div>
+    <p>I decided to set up this blog mostly with the aim of writing down install instructions as neat as possible for the software I use, so I (hopefully) can save time when setup a new computer. So, why don&#8217;t describe the technology behind the blog itself as a first post?</p>
+
+<p>Quick and dirty: the blog is a set of <a href='http://en.wikipedia.org/wiki/HTML'>HTML</a> pages, styled through <a href='http://twitter.github.com/bootstrap/'>Bootstrap</a>, hosted on <a href='http://github.com'>github</a> statically generated through <a href='http://jekyllrb.com'>Jekyll</a> using the twitter theme for the <a href='http://jekyllbootstrap.com'>Jekyll-Bootstrap</a> framework, with comments support provided by <a href='http://diqus.com'>Disqus</a>.</p>
+
+<p>Let me explain all this with a bit more of detail. The site contents are not dynamically generated or read from a database: the actual HTML code your browser is rendering is stored somewhere at github. The other endpoint is a set of text files holding the blog contents, encoded using the markdown language. These files are sent from my computer to the github server, where a text processor called Jekyll transforms them into HTML code.</p>
+
+<p>Although the not so low number of involved software, the required installation is relatively simple, and basically follows the workflow described in the <a href='http://jekyllbootstrap.com'>Jekyll-Bootstrap site</a> and in a specific <a href='http://erjjones.github.com/blog/How-I-built-my-blog-in-one-day'>post from Eric Jones</a>.</p>
+
+<p>I&#8217;ll assume you have a working knowledge of version control systems, you are comfortable with git and you have a github account. If not, google for a git tutorial (for instance <a href='http://learn.github.com/p/intro.html'>this one</a>), <a href='http://try.github.com'>play around for a while</a>, and <a href='http://github.com/signup'>set up</a> a github account. I&#8217;ll also assume you have an updated version of Ruby on your system (execute <code>sudo gem update --system</code> to check for updates on your Ruby installation)</p>
+
+<ol>
+<li>
+<p>Once logged into github, create a new repository named <code>YOURUSERNAME.github.com</code>, where <code>YOURUSERNAME</code> should be replaced by your actual github user name (in this step as well as in all subsequent occurrences of <code>YOURUSERNAME</code>. Don&#8217;t let github add a README.md file, or you&#8217;ll run into a conflict later on.</p>
+</li>
+
+<li>
+<p>Position yourself in a suitable place of your file system, and clone locally Jekyll-Bootstrap in a directory named <code>YOURUSERNAME.github.com</code>, then <code>cd</code> in that directory:</p>
+
+<pre><code>$ git clone https://github.com/plusjade/jekyll-bootstrap.git YOURUSERNAME.github.com
+$ cd YOURUSERNAME.github.com</code></pre>
+</li>
+
+<li>
+<p>Associate the downloaded software with your github repository and push it:</p>
+
+<pre><code>$ git remote set-url origin git@github.com:YOURUSERNAME/YOURUSERNAME.github.com.git
+$ git push origin master</code></pre>
+</li>
+</ol>
+
+<p>At this point, all the essential software is installed: point your browser to <code>http://YOURUSERNAME.github.com</code> and you should see the Jekyll-Bootstrap template Web site. Note that generating the online web site could require up to some minutes, so don&#8217;t worry you don&#8217;t see your site immediately.</p>
+
+<p>Unless you really like to live dangerously, it is wise to work on a development site instead of directly modify the publicly available site. Thus, it is strongly recommended that you also install a local copy of Jekyll, which installs as a Ruby gem:</p>
+<div class='highlight'><pre><code class='sh'><span class='nv'>$ </span>sudo gem install jekyll
+</code></pre></div>
+<p>When this step completes (and this could require some time), you can run a Jekyll server:</p>
+<div class='highlight'><pre><code class='sh'><span class='nv'>$ </span>jekyll --server
+</code></pre></div>
+<p>It is important that the latter operation is executed within the <code>YOURUSERNAME.github.com</code> directory: this will allow Jekyll-Bootstrap to read its contents and convert them into a Web site locally available at the address <code>localhost:4000</code>. The conversion works as follows: all files whose name does not start with an underscore are read and trasformed using:</p>
+
+<ul>
+<li>a <a href='http://daringfireball.net/projects/markdown/'>Markdown</a> parser in order to handle the static part of the site contents: this allows blog entries to be written even without knowing anything about HTML, but simply rendering structure and formatting through a simple <a href='http://daringfireball.net/projects/markdown/syntax'>textual-based syntax</a>;</li>
+
+<li>the <a href='http://liquidmarkup.org/'>Liquid templating engine</a> with the aim of rendering the dynamic part of the site and factoring common and repeated parts.</li>
+</ul>
+
+<p>All files whose name begins with an underscore is left untouched. Such files contain configuration options, assets such as CSS and JS, templates and so on. In particular, under <code>_site</code> you&#8217;ll find a copy of the generated Web site.</p>
+
+<p>The Jekyll server is aware of file modification, so the locally served Web site is always updated. Also in this case, the Web site generation requires some time, although sensibly lower than required when publishing online. Roughly speaking, the new content will usually show up when the page is reloaded once or twice.</p>
+
+<p>You can google tutorials or cheat sheets for the syntax of both tools. Just to give a first reference, you can read the <a href='http://daringfireball.net/projects/markdown/'>Markdown tutorial by John Gruber</a> and the <a href='https://github.com/Shopify/liquid/wiki/Liquid-for-Designers'>Liquid for Designers</a> section of the Shopify site on github.</p>
+
+<p>Content can be added either as a new post or a new page: the former is the usual atomic content of a blog, while the latter represents a site page, such as a Bio, an archive of past posts and so on. The syntax for adding both elements is similar, and is based on <code>rake</code>, a building tool analogous to <code>make</code> but relying on Ruby:</p>
+<div class='highlight'><pre><code class='sh'><span class='nv'>$ </span>rake post <span class='nv'>title</span><span class='o'>=</span><span class='s2'>&quot;TITLE&quot;</span>
+<span class='nv'>$ </span>rake page <span class='nv'>name</span><span class='o'>=</span><span class='s2'>&quot;NAME&quot;</span>
+</code></pre></div>
+<p>The text within double quotes represents the title of the post in the first example, and the name of the markdown file containing the page description in the second one. Created pages will reside in the home directory, unless the specified name is a pathname, while posts are placed in the <code>_posts</code> directory, in files named aggregating the current date and the specified title. It is precisely this file which you&#8217;ll have to edit, possibly using Markdown syntax, in order to insert the actual post content.</p>
+
+<p>Once you are satisfied with your blog, publishing it online is simply a matter of committing and pushing your repository:</p>
+<div class='highlight'><pre><code class='sh'><span class='nv'>$ </span>git add .
+<span class='nv'>$ </span>git commit -m <span class='s2'>&quot;Added new content&quot;</span>
+<span class='nv'>$ </span>git push origin master
+</code></pre></div>
+<p>Another operation worth considering is that of customizing your blog: this will likely require to write general information and setting into <code>_config.yml</code> and to modify files in the <code>_layouts</code> and <code>_includes</code> directories. The <a href='http://jekyllbootstrap.com/usage/blog-configuration.html'>Jekyll-Bootstrap site</a> and the <a href='http://erjjones.github.com/blog/How-I-built-my-blog-in-one-day'>Eric Jones&#8217; blog</a> represent valuable resources. The only things I did not find there are the following ones.</p>
+
+<ol>
+<li>
+<p>The CSS provided with the downloaded version of Jekyll-Bootstrap is not responsive, that is it refers to a fixed layout requiring to horizontally scroll the browser contents if its window is too narrow. This is particularly annoying when browsing through a device with limited screen size, such as a smartphone. The solution to this problem is that of replacing the file <code>assets/themes/twitter/bootstrap/css/bootstrap.min.css</code> with a customized version built and downloaded from the <a href='http://twitter.github.com/bootstrap/customize.html'>Bootstrap site</a> (be sure to select the options in the <em>Responsive</em> section).</p>
+</li>
+
+<li>
+<p>Source code highlighting needs to be explicitly turned on. This requires to install <a href='http://pygments.org'>pygments</a></p>
+
+<pre><code>$ sudo easy_install Pygments</code></pre>
+
+<p>(using one of the methods in section <em>Pygments</em> of the <a href='https://github.com/mojombo/jekyll/wiki/Install'>Jekyll site</a> if <code>easy_instal</code> is not available), and to create a CSS file containing the source code formatting rules</p>
+
+<pre><code> $ pygmentize -S default -f html &gt; assets/css/pygments.css</code></pre>
+
+<p>This file has to be copied in the <code>assets/themes/twitter/css</code> directory and referenced in <code>_includes/themes/twitter/default.html</code> through a <code>link</code> tag:</p>
+
+<pre><code> &lt;link href=&quot;{{ ASSET_PATH }}/css/syntax.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot; media=&quot;all&quot;&gt;</code></pre>
+</li>
+
+<li>
+<p>This last point is not explicitly connected with Jekyll-Bootstrap, but it&#8217;s a part of what I wanted as default facility in my blog, that is proper mathematical formatting. My choice is <a href='http://www.mathjax.org'>MathJax</a>, which does not (necessarily) require local installation: it&#8217;s just a matter of remotely including the following javascript code into <code>_includes/themes/twitterdefault.html</code>:</p>
+
+<pre><code>&lt;script type=&quot;text/javascript&quot; src=&quot;https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML&quot;&gt;&lt;/script&gt;</code></pre>
+
+<p>which is ugly, but is the only safe way currently provided to avoid man-in-the-middle attacks. But in the end, this will allow your posts to have nice formulas such as</p>
+
+<p>$$ \frac{1}{\sqrt{2 \pi} \sigma} \int_{-\infty}^{+\infty} \mathrm e^{\frac{(x - \mu)^2}{2 \sigma^2}} \mathrm d x = 1 $$</p>
+
+<p>Remeber, though, that inline equations should escape backslash in delimiters, thus using <code>\\(</code> and <code>\\)</code>instead of <code>\(</code> and <code>\)</code>.</p>
+</li>
+</ol>
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev disabled"><a>&larr; Previous</a></li>
+      
+        <li><a href="/archive.html">Archive</a></li>
+      
+        <li class="next"><a href="/2013/03/24/installing-hadoop-from-scratch-and-i-mean-it" title="Installing hadoop from scratch. And I mean it">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'malchiodi'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+</div>
+
+
+      </div>
+
+      <footer>
+        <p>&copy; Dario Malchiodi 2012 
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    
+  </body>
+</html>
+
