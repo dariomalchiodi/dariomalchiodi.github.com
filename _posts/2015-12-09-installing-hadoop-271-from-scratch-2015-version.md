@@ -237,7 +237,23 @@ Specifically:
     <name>dfs.replication</name>
     <value>1</value>
   </property>
+  <property>
+    <name>dfs.namenode.name.dir</name>
+    <value>file:/usr/local/hadoop/yarn_data/hdfs/namenode</value>
+  </property>
+  <property>
+    <name>dfs.datanode.data.dir</name>
+    <value>file:/usr/local/hadoop/yarn_data/hdfs/datanode</value>
+  </property>
 </configuration>
+{% endhighlight %}
+
+   This also requires to manually create the two directories specified
+   in the last two `value` XML nodes:
+
+{% highlight sh %}
+hadoop-user@manhattan:~$ mkdir -p /usr/local/hadoop/yarn_data/hdfs/namenode
+hadoop-user@manhattan:~$ mkdir -p /usr/local/hadoop/yarn_data/hdfs/datanode
 {% endhighlight %}
 
 Finally, set to `/usr` the `JAVA_HOME` variable in `/usr/local/hadoop/etc/hadoop/hadoop-env.sh`.
@@ -248,7 +264,16 @@ executed as `hadoop-user`:
 
 {% highlight console %}
 hadoop-user@manhattan:~$ hdfs namenode -format
+15/12/10 10:45:32 INFO namenode.NameNode: STARTUP_MSG: 
+/************************************************************
 ...
+15/12/10 10:45:34 INFO common.Storage: Storage directory /usr/local/hadoop/yarn_data/hdfs/namenode has been successfully formatted.
+...
+15/12/10 10:45:34 INFO util.ExitUtil: Exiting with status 0
+15/12/10 10:45:34 INFO namenode.NameNode: SHUTDOWN_MSG: 
+/************************************************************
+SHUTDOWN_MSG: Shutting down NameNode at manhattan/127.0.1.1
+************************************************************/
 {% endhighlight %}
 
 the (hopeful) successful result of this operation is specified within the
@@ -261,17 +286,15 @@ the mapreduce daemons:
 
 {% highlight console %}
 hadoop-user@manhattan:~$ start-dfs.sh
-8/10/10 15:28:31 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
 Starting namenodes on [localhost]
-localhost: starting namenode, logging to /usr/local/hadoop-2.4.0/logs/hadoop-hadoop-user-namenode-manhattan.out
-localhost: starting datanode, logging to /usr/local/hadoop-2.4.0/logs/hadoop-hadoop-user-datanode-manhattan.out
+localhost: starting namenode, logging to /usr/local/hadoop-2.7.1/logs/hadoop-hadoop-user-namenode-manhattan.out
+localhost: starting datanode, logging to /usr/local/hadoop-2.7.1/logs/hadoop-hadoop-user-datanode-manhattan.out
 Starting secondary namenodes [0.0.0.0]
-0.0.0.0: starting secondarynamenode, logging to /usr/local/hadoop-2.4.0/logs/hadoop-hadoop-user-secondarynamenode-manhattan.out
-8/10/10 15:28:53 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+0.0.0.0: starting secondarynamenode, logging to /usr/local/hadoop-2.7.1/logs/hadoop-hadoop-user-secondarynamenode-manhattan.out
 hadoop-user@manhattan:~$ start-yarn.sh
 starting yarn daemons
 starting resourcemanager, logging to /usr/local/hadoop/logs/yarn-hadoop-user-resourcemanager-manhattan.out
-localhost: starting nodemanager, logging to /usr/local/hadoop-2.4.0/logs/yarn-hadoop-user-nodemanager-manhattan.out
+localhost: starting nodemanager, logging to /usr/local/hadoop-2.7.1/logs/yarn-hadoop-user-nodemanager-manhattan.out
 {% endhighlight %}
 
 Although it is possible to directly write on the hadoop file system root
@@ -290,10 +313,10 @@ component it is possible to run one of the example jobs distributed along with
 hadoop:
 
 {% highlight console %}
-hadoop-user@manhattan:~$ hadoop jar /usr/local/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.4.0.jar pi 10 1000
+hadoop-user@manhattan:~$ hadoop jar /usr/local/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.1.jar pi 10 1000
 ...
-Job Finished in 34.136 seconds
-Estimated value of Pi is 3.1428571428571
+Job Finished in 124.244 seconds
+Estimated value of Pi is 3.14080000000000000000
 {% endhighlight %}
 
 Finally, to stop the hadoop daemons, simply invoke `stop-dfs.sh` and
